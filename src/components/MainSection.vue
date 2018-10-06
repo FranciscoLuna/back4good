@@ -65,21 +65,27 @@
         md-icon="event_seat"
         md-label="Conecta tu Back4Good Sensor"
         md-description="No se ha conectado aún nigún Back4Good Sensor">
-        <md-button class="md-primary md-raised">Conectar dispositivo</md-button>
+        <md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button>
         <md-button class="md-accent md-raised">Obtener un Back4Good Sensor</md-button>
+        <textarea id="bluetoothData" v-model="bluetoothData"></textarea>
       </md-empty-state>
     </div>
   </div>
 </template>
 
 <script>
+let service = 0xBEEF
+let characteristic = 0xFEED
+let byteLength = 20
 export default {
   name: 'MainSection',
   data: () => ({
     msg: 'Welcome to Main Section',
     timeRemaining: 0,
     checkInterval: null,
-    subSection: 'start'
+    subSection: 'start',
+    rawData: '',
+    bluetoothData: ''
   }),
   methods: {
     changeSubSection (subSection) {
@@ -114,6 +120,37 @@ export default {
     },
     mounted () {
       this.checkTimeRemaining()
+    },
+    addRawData (event) {
+      var value = event.target.value
+      for (var i = 0; i < byteLength; i++) {
+        this.rawData = this.rawData + String.fromCharCode(value.getUint8(i))
+      }
+      this.bluetoothData = this.rawData
+    },
+    listBluethoothDevices () {
+      navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: ['battery_service']
+        // filters: [{ services: ['battery_service'] }]
+      })
+        .then(device => {
+          // Human-readable name of the device.
+          console.log(device.name)
+
+          // Attempts to connect to remote GATT Server.
+          return device.gatt.connect()
+        })
+        .then(server => server.getPrimaryService(service))
+        .then(service => service.getCharacteristic(characteristic))
+        .then(characteristic => {
+          return characteristic.startNotifications()
+            .then(_ => {
+              characteristic.addEventListener('addRawData', this.addRawData)
+            })
+        })
+        .then(_ => console.log('Notifications have been started.'))
+        .catch(error => { console.log(error) })
     }
   }
 }
