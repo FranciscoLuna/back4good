@@ -60,20 +60,39 @@
       <span>Sección Cronómetro</span>
     </div>
     <div v-else-if="this.subSection=='monitor'">
-      <!-- Other icons: "devices_other" -->
-      <md-empty-state
-        md-icon="event_seat"
-        md-label="Conecta tu Back4Good Sensor"
-        md-description="No se ha conectado aún nigún Back4Good Sensor">
-        <md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button>
-        <md-button class="md-accent md-raised">Obtener un Back4Good Sensor</md-button>
-        <textarea id="bluetoothData" v-model="bluetoothData"></textarea>
-      </md-empty-state>
+      <transition name="fadeSync">
+        <!-- Other icons: "devices_other" -->
+        <div v-if="!this.syncronized">
+          <md-empty-state
+            md-icon="event_seat"
+            md-label="Conecta tu Back4Good Sensor"
+            md-description="No se ha conectado aún nigún Back4Good Sensor">
+            <!-- <md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button> -->
+            <md-button id="syncButton" v-on:click="syncSimulation" class="md-transparent md-raised">Simular conexión</md-button>
+            <md-button class="md-accent md-raised">Obtener un Back4Good Sensor</md-button>
+          </md-empty-state>
+        </div>
+        <div v-else>
+          <md-card>
+            <md-content id="bluetoothData">
+              <md-button v-on:click="checkSyncState()" class="md-transparent">Check State</md-button>
+              <md-button v-on:click="turnMonitorSimulation()" class="md-primary">Monitorice</md-button>
+              <div v-if="this.monitorizationEnabled">
+                <md-content>{{firstSensor}}</md-content>
+                <md-content>{{secondSensor}}</md-content>
+                <md-content>{{thirdSensor}}</md-content>
+                <md-content>{{fourthSensor}}</md-content>
+              </div>
+            </md-content>
+          </md-card>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
+import SIMDATA from '../data/simulation.json'
 let service = 0xBEEF
 let characteristic = 0xFEED
 let byteLength = 20
@@ -84,8 +103,15 @@ export default {
     timeRemaining: 0,
     checkInterval: null,
     subSection: 'start',
+    syncronized: false,
+    monitorizationEnabled: false,
     rawData: '',
-    bluetoothData: ''
+    simulatedData: SIMDATA['data'], /* JSON.parse(fs.readFileSync('../data/simulation.json', 'utf8')) */
+    simDataCount: 0,
+    firstSensor: 0,
+    secondSensor: 0,
+    thirdSensor: 0,
+    fourthSensor: 0
   }),
   methods: {
     changeSubSection (subSection) {
@@ -146,11 +172,32 @@ export default {
         .then(characteristic => {
           return characteristic.startNotifications()
             .then(_ => {
-              characteristic.addEventListener('addRawData', this.addRawData)
+              /* characteristic.addEventListener('addRawData', this.addRawData) */
             })
         })
         .then(_ => console.log('Notifications have been started.'))
         .catch(error => { console.log(error) })
+    },
+    checkSyncState () {
+      console.log(this.syncronized)
+    },
+    syncSimulation () {
+      this.syncronized = true
+    },
+    simulatedGetSample () {
+      let sampleName = 'sample' + (this.simDataCount + 1)
+      let sample = this.simulatedData[sampleName]
+      this.firstSensor = sample[0]
+      this.secondSensor = sample[1]
+      this.thirdSensor = sample[2]
+      this.fourthSensor = sample[3]
+      this.simDataCount = (this.simDataCount + 1) % 100
+    },
+    turnMonitorSimulation () {
+      this.monitorizationEnabled = !this.monitorizationEnabled
+      if (this.monitorizationEnabled) {
+        setInterval(this.simulatedGetSample, 1000)
+      }
     }
   }
 }
@@ -178,10 +225,25 @@ export default {
     letter-spacing: -.05em;
     font-family: 'Roboto Mono', monospace;
   }
+
   .md-card {
     width: 320px;
     margin: 4px;
     display: inline-block;
     vertical-align: top;
+  }
+
+  @media (min-width: 500px) {
+    .md-card {
+      width: 90%;
+      margin: 16px;
+      vertical-align: top;
+    }
+    .md-card-content {
+      text-align: left;
+    }
+    .md-card-content span{
+      margin-left: 80px
+    }
   }
 </style>
