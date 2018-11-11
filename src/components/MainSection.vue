@@ -58,60 +58,25 @@
     </div>
     <div v-else-if="this.subSection=='timer'">
       <span>Sección Cronómetro</span>
+      <pomodoro></pomodoro>
     </div>
     <div v-else-if="this.subSection=='monitor'">
       <transition name="fadeSync">
-        <!-- Other icons: "devices_other" -->
-        <div v-if="!this.syncronized">
-          <md-empty-state
-            md-icon="event_seat"
-            md-label="Conecta tu Back4Good Sensor"
-            md-description="No se ha conectado aún nigún Back4Good Sensor">
-            <!-- <md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button> -->
-            <md-button id="syncButton" v-on:click="syncSimulation" class="md-transparent md-raised">Simular conexión</md-button>
-            <md-button class="md-accent md-raised">Obtener un Back4Good Sensor</md-button>
-          </md-empty-state>
-        </div>
-        <div v-else>
-          <md-card>
-            <md-content id="bluetoothData">
-              <md-button v-on:click="checkSyncState()" class="md-transparent">Check State</md-button>
-              <md-button v-on:click="turnMonitorSimulation()" class="md-primary">Monitorice</md-button>
-              <div v-if="this.monitorizationEnabled">
-                <md-content>{{firstSensor}}</md-content>
-                <md-content>{{secondSensor}}</md-content>
-                <md-content>{{thirdSensor}}</md-content>
-                <md-content>{{fourthSensor}}</md-content>
-              </div>
-            </md-content>
-          </md-card>
-        </div>
+        <sitting-monitor></sitting-monitor>
       </transition>
     </div>
   </div>
 </template>
 
 <script>
-import SIMDATA from '../data/simulation.json'
-let service = 0xBEEF
-let characteristic = 0xFEED
-let byteLength = 20
+
 export default {
   name: 'MainSection',
   data: () => ({
     msg: 'Welcome to Main Section',
     timeRemaining: 0,
     checkInterval: null,
-    subSection: 'start',
-    syncronized: false,
-    monitorizationEnabled: false,
-    rawData: '',
-    simulatedData: SIMDATA['data'], /* JSON.parse(fs.readFileSync('../data/simulation.json', 'utf8')) */
-    simDataCount: 0,
-    firstSensor: 0,
-    secondSensor: 0,
-    thirdSensor: 0,
-    fourthSensor: 0
+    subSection: 'start'
   }),
   methods: {
     changeSubSection (subSection) {
@@ -140,64 +105,12 @@ export default {
           var m = this.addZero(currentDate.getMinutes())
           var s = this.addZero(currentDate.getSeconds())
           this.timeRemaining = m + ':' + s
-          console.log(m + ':' + s)
+          // console.log(m + ':' + s)
         }, 1000)
       }
     },
     mounted () {
       this.checkTimeRemaining()
-    },
-    addRawData (event) {
-      var value = event.target.value
-      for (var i = 0; i < byteLength; i++) {
-        this.rawData = this.rawData + String.fromCharCode(value.getUint8(i))
-      }
-      this.bluetoothData = this.rawData
-    },
-    listBluethoothDevices () {
-      navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: ['battery_service']
-        // filters: [{ services: ['battery_service'] }]
-      })
-        .then(device => {
-          // Human-readable name of the device.
-          console.log(device.name)
-
-          // Attempts to connect to remote GATT Server.
-          return device.gatt.connect()
-        })
-        .then(server => server.getPrimaryService(service))
-        .then(service => service.getCharacteristic(characteristic))
-        .then(characteristic => {
-          return characteristic.startNotifications()
-            .then(_ => {
-              /* characteristic.addEventListener('addRawData', this.addRawData) */
-            })
-        })
-        .then(_ => console.log('Notifications have been started.'))
-        .catch(error => { console.log(error) })
-    },
-    checkSyncState () {
-      console.log(this.syncronized)
-    },
-    syncSimulation () {
-      this.syncronized = true
-    },
-    simulatedGetSample () {
-      let sampleName = 'sample' + (this.simDataCount + 1)
-      let sample = this.simulatedData[sampleName]
-      this.firstSensor = sample[0]
-      this.secondSensor = sample[1]
-      this.thirdSensor = sample[2]
-      this.fourthSensor = sample[3]
-      this.simDataCount = (this.simDataCount + 1) % 100
-    },
-    turnMonitorSimulation () {
-      this.monitorizationEnabled = !this.monitorizationEnabled
-      if (this.monitorizationEnabled) {
-        setInterval(this.simulatedGetSample, 1000)
-      }
     }
   }
 }
