@@ -46,7 +46,7 @@ export default {
     monitorEnabled: false,
     bleDevice: null,
     h_data: { 
-      max: 15,
+      max: 25,
       min: 0,
       data: [p_h0, p_h1, p_h2, p_h3]
     }
@@ -109,19 +109,19 @@ export default {
       switch(uuid){
         case (postureSensor0Charact):
           var t0 = value.getUint16(0, true)
-          p_h0.value = (t0 / 300) >> 0
+          p_h0.value = (t0 / 200) >> 0
           break
         case (postureSensor1Charact):
           var t1 = value.getUint16(0, true)
-          p_h1.value = (t1 / 300) >> 0
+          p_h1.value = (t1 / 200) >> 0
           break
         case (postureSensor2Charact):
           var t2 = value.getInt16(0, true)
-          p_h2.value = (t2 / 300) >> 0
+          p_h2.value = (t2 / 200) >> 0
           break
         case (postureSensor3Charact):
           var t3 = value.getInt16(0, true)
-          p_h3.value = (t3 / 300) >> 0
+          p_h3.value = (t3 / 200) >> 0
           break
         default:
           break

@@ -19,8 +19,8 @@
         {{ tab.label }} <i class="badge" v-if="tab.data.badge">{{ tab.data.badge }}</i>
       </template>
       <md-tab id="tab-start" md-label="Inicio" @click="changeSubSection('start')"></md-tab>
-      <md-tab id="tab-timer" md-label="Cronómetro" @click="changeSubSection('timer'); clearNewTimeRemaining()" :md-template-data="{ badge:timeRemaining}" ></md-tab>
       <md-tab id="tab-monitor" md-label="Monitorización" @click="changeSubSection('monitor')"></md-tab>
+      <md-tab id="tab-timer" md-label="Cronómetro" @click="changeSubSection('timer'); clearNewTimeRemaining()" :md-template-data="{ badge:timeRemaining}" ></md-tab>
     </md-tabs>
 
     <div v-if="this.subSection=='start'">
@@ -57,7 +57,6 @@
       </div>
     </div>
     <div v-else-if="this.subSection=='timer'">
-      <span>Sección Cronómetro</span>
       <pomodoro></pomodoro>
     </div>
     <div v-else-if="this.subSection=='monitor'">

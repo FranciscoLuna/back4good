@@ -7,7 +7,9 @@ import ProfileForm from '@/components/ProfileForm'
 import MainSection from '@/components/MainSection'
 import TestBluetooth from '@/components/TestBluetooth'
 import TestBluetoothSitting from '@/components/TestBluetoothSitting'
-import TestBluetoothSittingV2 from '@/components/TestBluetoothSittingV2'
+//import TestBluetoothSittingV2 from '@/components/TestBluetoothSittingV2'
+import TestBluetoothSittingV2 from '@/components/TestBluetoothSittingVRegisterData'
+
 import Pomodoro from '@/components/Pomodoro'
 
 Vue.use(Router)
