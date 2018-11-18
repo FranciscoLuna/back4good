@@ -25,7 +25,7 @@
           <md-field :md-toggle-password="false" :class="getValidationClass('repPasswd')">
             <label for="rep-passwd">Repita la contraseña</label>
             <md-input name="rep-passwd" id="rep-passwd" maxlength="12" v-model="form.repPasswd" type="password" :disabled="sending"></md-input>
-            <span class="md-error" v-if="!$v.form.repPasswd.equalToPasswd">Las contraseñas no coinciden {{form.passwd}} {{form.repPasswd}}</span>
+            <span class="md-error" v-if="!$v.form.repPasswd.equalToPasswd">Las contraseñas no coinciden</span>
           </md-field>
 
           <md-divider></md-divider>
@@ -144,12 +144,27 @@ export default {
       }
     },
     saveUser () {
+      console.log("Guardando usuario")
       this.sending = true
-
+      let usersData = []
+      if (localStorage.getItem('users')){
+        usersData = JSON.parse(localStorage.getItem('users'))
+      }
+      let currentuser = {
+        userName: this.form.userName,
+        nickName: this.form.nickName,
+        birthdate: this.form.birthdate,
+        gender: this.form.gender,
+        height: this.form.height,
+        weight: this.form.weight 
+      }
+      usersData.push(currentuser)
+      console.log(usersData)
       // Instead of this timeout, here you can call your API
       window.setTimeout(() => {
         this.userSaved = true
         this.sending = false
+        localStorage.setItem('users', JSON.stringify(usersData))
         this.$router.push({ name: 'Main' })
       }, 1500)
     },
@@ -164,4 +179,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
 </style>

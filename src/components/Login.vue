@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <img id="logo" src="../assets/logo.png">
+    <img id="logo" src="../assets/logo no oficial b4g.jpg">
     <div>
       <div v-if="!this.state">
         <md-button v-on:click="goToProfileForm()">Nuevo usuario</md-button>
@@ -99,6 +99,7 @@ export default {
 <style scoped>
  #logo {
    margin-top: 70px;
+   max-width: 500px;
  }
 
 </style>
