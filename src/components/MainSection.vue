@@ -24,38 +24,8 @@
     </md-tabs>
 
     <div v-if="this.subSection=='start'">
-      <div>
-        <md-card>
-          <md-card-header>
-            <md-card-header-text>
-              <div class="md-title">Último logro</div>
-              <div class="md-subhead">Normal size</div>
-            </md-card-header-text>
-            <md-card-media>
-              <img src="../assets/logo.png" alt="Badges">
-            </md-card-media>
-          </md-card-header>
-          <md-card-actions>
-            <md-button class="md-primary">Ver logros</md-button>
-          </md-card-actions>
-        </md-card>
-        <md-card>
-          <md-card-header>
-            <div class="md-title">Estadísticas</div>
-          </md-card-header>
-          <md-card-content>
-            <span>Horas monitorizadas: {}</span>
-            <md-divider class="md-inset"></md-divider>
-            <span>Tiempo en una buena postura: {}</span>
-            <md-divider class="md-inset"></md-divider>
-            <span>Número total de monitorizaciones: {}</span>
-          </md-card-content>
-          <md-card-actions>
-            <md-button class="md-primary">Ver perfil</md-button>
-          </md-card-actions>
-        </md-card>
-      </div>
-    </div>
+      <information></information>
+    </div>  
     <div v-else-if="this.subSection=='timer'">
       <pomodoro></pomodoro>
     </div>
@@ -138,24 +108,4 @@ export default {
     font-family: 'Roboto Mono', monospace;
   }
 
-  .md-card {
-    width: 320px;
-    margin: 4px;
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  @media (min-width: 500px) {
-    .md-card {
-      width: 90%;
-      margin: 16px;
-      vertical-align: top;
-    }
-    .md-card-content {
-      text-align: left;
-    }
-    .md-card-content span{
-      margin-left: 80px
-    }
-  }
 </style>

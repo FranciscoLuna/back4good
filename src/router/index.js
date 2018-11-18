@@ -11,12 +11,17 @@ import TestBluetoothSitting from '@/components/TestBluetoothSitting'
 import TestBluetoothSittingV2 from '@/components/TestBluetoothSittingVRegisterData'
 
 import Pomodoro from '@/components/Pomodoro'
+import Information from '@/components/Information'
+
+import Profile from '@/components/Profile'
 
 Vue.use(Router)
 Vue.use(heatmap)
 
 Vue.component('sitting-monitor', TestBluetoothSittingV2)
 Vue.component('pomodoro',Pomodoro)
+Vue.component('information', Information)
+Vue.component('user-profile', Profile)
 
 export default new Router({
   routes: [

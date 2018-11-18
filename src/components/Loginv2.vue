@@ -4,8 +4,8 @@
   <div class="loginOptions">
     <div id="registeredUsers" v-if="anyUserInLocalDB">
       <md-subheader class="md-primary">Usuario registrado</md-subheader>
-      <md-list v-bind:key="n" v-if="!userSelected" id="userList" class="md-scrollbar" v-for="(usr,n) in users">
-          <md-list-item>
+      <md-list  v-if="!userSelected" id="userList" class="md-scrollbar" >
+          <md-list-item v-bind:key="n" v-for="(usr,n) in users">
             <md-icon>account_circle</md-icon>
             <span class="md-list-item-text">{{usr}}</span>
             <md-button class="md-icon-button md-list-action" v-on:click="selectUser(n)">
@@ -13,7 +13,7 @@
             </md-button>
           </md-list-item>
       </md-list>
-      <div v-else id="userLogin">
+      <div key="login" v-else id="userLogin">
         <form id="loginForm" novalidate class="md-layout" @submit.prevent="validateUser">
           <div class="md-layout-item md-small-size-100">
             <md-content id="userSelected">
@@ -70,18 +70,12 @@ export default {
       try {
         let userData = JSON.parse(localStorage.getItem('users'));
         if(userData.length != 0){
-          console.log("Userdata: ")
-          console.log(userData)
           for(var u = 0; u < userData.length; u++){
-            console.log("it:")
-            console.log(u)
             this.users.push(userData[u].userName)
           }
-          console.log(this.users)
           this.anyUserInLocalDB = true
         }
       } catch(e) {
-        console.log(e)
         localStorage.removeItem('users');
       }
     }
@@ -114,6 +108,7 @@ export default {
       }
     },
     loginUser(){
+      localStorage.userName = this.form.userName
       this.$router.push({ name: 'Main' })
     },
     goToProfileForm(){
