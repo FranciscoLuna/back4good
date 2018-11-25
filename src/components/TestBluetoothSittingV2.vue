@@ -4,8 +4,8 @@
       md-icon="event_seat"
       md-label="Conecta tu Bertical Sensor"
       md-description="No se ha conectado aún nigún Back4good Sensor">
-      <!--<md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button>-->
-      <md-button id="syncButton" v-on:click="simuleBLE" class="md-primary md-raised">Conectar dispositivo</md-button>
+      <md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button>
+      <!--<md-button id="syncButton" v-on:click="simuleBLE" class="md-primary md-raised">Conectar dispositivo</md-button>-->
       <md-button class="md-accent md-raised">Obtener un Back4Good Sensor</md-button>
     </md-empty-state>
 
