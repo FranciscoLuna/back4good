@@ -303,6 +303,9 @@ export default {
             }
           }
         }
+        else {
+          console.log("Count ")
+        }
       },20)
     },
     saveFile(dataJSON, taskName) {
@@ -329,7 +332,7 @@ export default {
       }
       this.taskJSON.samples.push(currentSample)
       this.time = currentTime
-    },
+    }/*,
     get(url) {
       // Return a new promise.
       return new Promise(function(resolve, reject) {
@@ -359,7 +362,7 @@ export default {
         // Make the request
         req.send();
       });
-    }
+    }*/
   }
 }
 </script>

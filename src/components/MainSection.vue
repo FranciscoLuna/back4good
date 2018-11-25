@@ -42,7 +42,7 @@
 export default {
   name: 'MainSection',
   data: () => ({
-    msg: 'Welcome to Main Section',
+    msg: 'Bienvenido a Back4good',
     timeRemaining: 0,
     checkInterval: null,
     subSection: 'start'
