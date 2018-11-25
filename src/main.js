@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import { MdButton, MdContent, MdTabs, MdCard, MdDivider,
-  MdDatepicker, MdRadio, MdProgress, MdList, MdSubheader, MdField, MdMenu, MdDialog, MdToolbar, MdEmptyState } from 'vue-material/dist/components'
+  MdDatepicker, MdRadio, MdProgress, MdList, MdSubheader, MdField, MdMenu, MdDialog, MdToolbar, MdEmptyState, MdAvatar } from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
@@ -24,6 +24,7 @@ Vue.use(MdMenu)
 Vue.use(MdDialog)
 Vue.use(MdToolbar)
 Vue.use(MdEmptyState)
+Vue.use(MdAvatar)
 
 /* eslint-disable no-new */
 new Vue({
