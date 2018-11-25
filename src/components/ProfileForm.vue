@@ -165,6 +165,7 @@ export default {
         this.userSaved = true
         this.sending = false
         localStorage.setItem('users', JSON.stringify(usersData))
+        localStorage.userName = currentuser.userName
         this.$router.push({ name: 'Main' })
       }, 1500)
     },
