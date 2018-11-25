@@ -4,7 +4,8 @@
       md-icon="event_seat"
       md-label="Conecta tu Bertical Sensor"
       md-description="No se ha conectado aún nigún Back4good Sensor">
-      <md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button>
+      <!--<md-button id="syncButton" v-on:click="listBluethoothDevices" class="md-primary md-raised">Conectar dispositivo</md-button>-->
+      <md-button id="syncButton" v-on:click="simuleBLE" class="md-primary md-raised">Conectar dispositivo</md-button>
       <md-button class="md-accent md-raised">Obtener un Back4Good Sensor</md-button>
     </md-empty-state>
 
@@ -65,6 +66,32 @@ export default {
       p_h3.y = (wrapperHeight*(11 / 13)) >> 0
       //console.log('Cambio de tamanio')
       //console.log('Ejemplos posicion: ' + p_h0.x + ' '  + p_h3.y + ' '+ p_h1.x)
+    },
+    simuleBLE(){
+      this.monitorEnabled = true
+      var t0 = 2500
+      p_h0.value = (t0 / 200) >> 0
+
+      var t1 = 4500
+      p_h1.value = (t1 / 200) >> 0
+
+      var t2 = 3500
+      p_h2.value = (t2 / 200) >> 0
+
+      var t3 = 5000
+      p_h3.value = (t3 / 200) >> 0
+
+      this.h_data.data = [p_h0, p_h1, p_h2, p_h3]
+
+      this.$nextTick(_ =>{
+        heatmapInstance = h337.create({
+          container: document.querySelector('.heatmapContainer')
+        })
+      this.resizeHeatmap()
+      window.addEventListener('resize', this.resizeHeatmap)
+      heatmapInstance.setData(this.h_data)
+      //console.log("[" + p_h0.value + ", " + p_h1.value + ", " +  p_h2.value + ", " +  p_h3.value + "]")
+      })
     },
     listBluethoothDevices () {
       navigator.bluetooth.requestDevice({ filters: [{ services: [sittingPostureService] }] })
