@@ -8,7 +8,9 @@ import MainSection from '@/components/MainSection'
 import TestBluetooth from '@/components/TestBluetooth'
 import TestBluetoothSitting from '@/components/TestBluetoothSitting'
 import TestBluetoothSittingV2 from '@/components/TestBluetoothSittingV2'
-//import TestBluetoothSittingV2 from '@/components/TestBluetoothSittingVRegisterData'
+//import RegisterData from '@/components/RegisterData'
+import RegisterDataWithPauseButton from '@/components/RegisterDataWithPauseButton'
+import RegisterDataWithProtocol from '@/components/RegisterDataWithProtocol'
 
 import Pomodoro from '@/components/Pomodoro'
 import Information from '@/components/Information'
@@ -61,6 +63,16 @@ export default new Router({
       path: '/testbluetoothsittingv2',
       name: 'TestBluetoothSittingV2',
       component: TestBluetoothSittingV2
+    },
+    {
+      path: '/register',
+      name: 'RegisterDataWithPauseButton',
+      component: RegisterDataWithPauseButton
+    },
+    {
+      path: '/registerwithprotocol',
+      name: 'RegisterDataWithProtocol',
+      component: RegisterDataWithProtocol
     }
   ]
 })
