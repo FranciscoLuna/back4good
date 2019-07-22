@@ -12,10 +12,12 @@
     <md-empty-state v-else
       md-label="Monitorizando tu postura"
       md-description="El color representa la fuerza ejercida. Procura que sea equilibrada.">
+      <input type="text" name="textboxSensors" id="textboxSensors" readonly="true" />
       <div id='heatmapContainerWrapper' class='heatmapContainerWrapper'>
         <div class='heatmapContainer'></div>
       </div>
       <md-button class="md-accent md-raised" v-on:click="stopBluetoothReading">Parar monitorización</md-button>
+      <!--<md-button class="md-accent md-raised" v-on:click="classifyPosture" value="=">Clasificación</md-button>-->
     </md-empty-state>
   </div>
 </template>
@@ -23,6 +25,7 @@
 <script>
 
 import h337 from 'heatmap.js/build/heatmap.js'
+import * as tf from '@tensorflow/tfjs' //Necesario instalar @tensorflow/tfjs: npm install @tensorflow/tfjs
 
 let sittingPostureService = 0x1818
 let postureSensor0Charact = 0x2A70
@@ -38,6 +41,8 @@ var p_h1 = {x: 0, y: 0, value: 0 }
 var p_h2 = {x: 0 , y: 0, value: 0 }
 var p_h3 = {x: 0 , y: 0, value: 0 }
 
+//var loadedModel = null; //Añadido por LDL
+
 var heatmapInstance = null
 
 export default {
@@ -46,6 +51,10 @@ export default {
     msg: 'Welcome to Bluetooth reading component',
     monitorEnabled: false,
     bleDevice: null,
+    t0: 0,
+    t1: 0,
+    t2: 0,
+    t3: 0,
     h_data: { 
       max: 25,
       min: 0,
@@ -66,20 +75,22 @@ export default {
       p_h3.y = (wrapperHeight*(11 / 13)) >> 0
       //console.log('Cambio de tamanio')
       //console.log('Ejemplos posicion: ' + p_h0.x + ' '  + p_h3.y + ' '+ p_h1.x)
+      
     },
     simuleBLE(){
+      
       this.monitorEnabled = true
-      var t0 = 2500
-      p_h0.value = (t0 / 200) >> 0
+      this.t0 = 2500
+      p_h0.value = (this.t0 / 200) >> 0
 
-      var t1 = 4500
-      p_h1.value = (t1 / 200) >> 0
+      this.t1 = 4500
+      p_h1.value = (this.t0 / 200) >> 0
 
-      var t2 = 3500
-      p_h2.value = (t2 / 200) >> 0
+      this.t2 = 3500
+      p_h2.value = (this.t0 / 200) >> 0
 
-      var t3 = 5000
-      p_h3.value = (t3 / 200) >> 0
+      this.t3 = 5000
+      p_h3.value = (this.t0 / 200) >> 0
 
       this.h_data.data = [p_h0, p_h1, p_h2, p_h3]
 
@@ -91,9 +102,13 @@ export default {
       window.addEventListener('resize', this.resizeHeatmap)
       heatmapInstance.setData(this.h_data)
       //console.log("[" + p_h0.value + ", " + p_h1.value + ", " +  p_h2.value + ", " +  p_h3.value + "]")
+      
+      
+
       })
     },
     listBluethoothDevices () {
+      
       navigator.bluetooth.requestDevice({ filters: [{ services: [sittingPostureService] }] })
       .then(device => {
         this.bleDevice = device
@@ -115,6 +130,8 @@ export default {
             console.log("Notification allowed")
             characteristic.addEventListener('characteristicvaluechanged',
                                             this.handleCharacteristicValueChanged);
+            characteristic.addEventListener('characteristicvaluechanged',  //Añadido por LDL
+                                            this.handleclassifyPosture);   //Añadido por LDL
             console.log('Notifications have been started.');
           })
         )
@@ -128,27 +145,52 @@ export default {
         
         console.log('OK')
       })
-      .catch(error => { console.log(error); });
+      .catch(error => { console.log(error); });      
+    },
+    handleclassifyPosture(event) {     //Añadido por LDL
+
+      async function loadNNModel() {
+
+        loadedModel = await tf.loadLayersModel('http://localhost:8080/static/model.json')
+
+      }
+      
+      (async() => {
+
+        await loadNNModel();
+        
+        const testingData =  tf.tensor2d([p_h0.value, p_h1.value, p_h2.value, p_h3.value], [1, 4])
+        var posture = loadedModel.predict(testingData);
+
+        var arr = posture.dataSync()
+        let i = arr.indexOf(Math.max(...arr));
+
+        textboxSensors.value = i;
+      })();
+
+      
     },
     handleCharacteristicValueChanged(event) {
       var value = event.target.value;
       var uuid = parseInt('0x' + event.target.uuid.split('-')[0])
       switch(uuid){
         case (postureSensor0Charact):
-          var t0 = value.getUint16(0, true)
-          p_h0.value = (t0 / 200) >> 0
+          this.t0 = value.getUint16(0, true)
+          p_h0.value = (this.t0 / 200) >> 0
+          console.log(this.t0)
+          console.log(p_h0.value)
           break
         case (postureSensor1Charact):
-          var t1 = value.getUint16(0, true)
-          p_h1.value = (t1 / 200) >> 0
+          this.t1 = value.getUint16(0, true)
+          p_h1.value = (this.t1 / 200) >> 0
           break
         case (postureSensor2Charact):
-          var t2 = value.getInt16(0, true)
-          p_h2.value = (t2 / 200) >> 0
+          this.t2 = value.getInt16(0, true)
+          p_h2.value = (this.t2 / 200) >> 0
           break
         case (postureSensor3Charact):
-          var t3 = value.getInt16(0, true)
-          p_h3.value = (t3 / 200) >> 0
+          this.t3 = value.getInt16(0, true)
+          p_h3.value = (this.t3 / 200) >> 0
           break
         default:
           break
@@ -156,7 +198,14 @@ export default {
       this.h_data.data = [p_h0, p_h1, p_h2, p_h3]
       //console.log("[" + p_h0.value + ", " + p_h1.value + ", " +  p_h2.value + ", " +  p_h3.value + "]")
       heatmapInstance.setData(this.h_data)
+      //textboxSensors.value = "[" + p_h0.value + ", " + p_h1.value + ", " +  p_h2.value + ", " +  p_h3.value + "]" //Editado por LD
+
+
+
+
+
     },
+    
     stopBluetoothReading() {
       if(this.bleDevice && this.bleDevice.gatt.connected){
         this.bleDevice.gatt.disconnect()

@@ -13,6 +13,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^1.2.1",
     "simpleheat": "^0.4.0",
     "vue": "^2.5.2",
     "vue-heatmapjs": "^1.3.0",
@@ -87,7 +88,7 @@
     "webpack-merge": "^4.1.0"
   },
   "engines": {
-    "node": ">= 6.0.0",
+    "node": ">= 10.0.0",
     "npm": ">= 3.0.0"
   },
   "browserslist": [

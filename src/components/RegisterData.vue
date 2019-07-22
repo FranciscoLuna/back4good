@@ -111,12 +111,14 @@ export default {
     samplesCount: 0,
     recordInitTime: 0,
     taskJSON : {
+      /*
       username: "",
       protocol: "",
       task: "",
       date: "",
       "Number of samples": "",
       samples: []
+      */
     }
   }),
   methods: {
@@ -270,10 +272,11 @@ export default {
       var currentSample = {
         sample: this.samplesCount,
         "relapse in milliseconds": currentTime - this.time,
-        "sensor 1": this.t0,
-        "sensor 2": this.t1,
-        "sensor 3": this.t2,
-        "sensor 4": this.t3
+        "sensor_1": this.t0, //Modificado
+        "sensor_2": this.t1, //Modificado
+        "sensor_3": this.t2, //Modificado
+        "sensor_4": this.t3, //Modificado
+        "class": this.currentTaskData.name //Modificado
       }
       this.taskJSON.samples.push(currentSample)
       this.time = currentTime

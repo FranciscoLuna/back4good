@@ -8,7 +8,7 @@ import MainSection from '@/components/MainSection'
 import TestBluetooth from '@/components/TestBluetooth'
 import TestBluetoothSitting from '@/components/TestBluetoothSitting'
 import TestBluetoothSittingV2 from '@/components/TestBluetoothSittingV2'
-//import RegisterData from '@/components/RegisterData'
+// import RegisterData from '@/components/RegisterData'
 import RegisterDataWithPauseButton from '@/components/RegisterDataWithPauseButton'
 import RegisterDataWithProtocol from '@/components/RegisterDataWithProtocol'
 
