@@ -112,10 +112,12 @@ export default {
       navigator.bluetooth.requestDevice({ filters: [{ services: [sittingPostureService] }] })
       .then(device => {
         this.bleDevice = device
+        console.log("Detected")
         return device.gatt.connect()
       })
       .then(server => {
         console.log("Connected")
+        console.log(server)
         return server.getPrimaryService(sittingPostureService)})
       .then(service => {
         console.log("Service found")
