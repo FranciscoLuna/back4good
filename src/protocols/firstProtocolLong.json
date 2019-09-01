@@ -1,0 +1,41 @@
+{
+	"protocolName": "B4GFirstProtocolLongTime",
+	"tasks": [
+		{
+			"taskName": "A",
+			"seconds" : 40,
+			"rounds": 5,
+			"description": "Postura correcta"
+		},{
+			"taskName": "B",
+			"seconds" : 40,
+			"rounds": 5,
+			"description": "Gluteos hacia delante, espalda superior apoyada en el respaldo"
+		},{
+			"taskName": "C",
+			"seconds" : 40,
+			"rounds": 5,
+			"description": "Espalda separada del respaldo, llevando el torso hacia alante con los brazos de apoyo contra las piernas"
+		},{
+			"taskName": "D_der",
+			"seconds" : 40,
+			"rounds": 5,
+			"description": "Ladeado hacia la derecha"
+		},{
+			"taskName": "D_izq",
+			"seconds" : 40,
+			"rounds": 5,
+			"description": "Ladeado hacia la izquierda"
+		},{
+			"taskName": "E_der",
+			"seconds" : 40,
+			"rounds": 5,
+			"description": "Pierna derecha cruzada sobre la otra"
+		},{
+			"taskName": "E_izq",
+			"seconds" : 40,
+			"rounds": 5,
+			"description": "Pierna izquierda cruzada sobre la otra"
+		}
+		]
+}
